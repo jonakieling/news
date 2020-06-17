@@ -10,6 +10,7 @@ namespace GeorgRinger\News\Domain\Service;
  */
 use GeorgRinger\News\Domain\Model\FileReference;
 use GeorgRinger\News\Domain\Model\Link;
+use TYPO3\CMS\Core\DataHandling\SlugHelper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -157,6 +158,11 @@ class NewsImportService extends AbstractImportService
         $news->setDescription($importItem['description']);
         $news->setDatetime(new \DateTime(date('Y-m-d H:i:sP', $importItem['datetime'])));
         $news->setArchive(new \DateTime(date('Y-m-d H:i:sP', $importItem['archive'])));
+
+        if (!isset($importItem['path_segment']) || empty($importItem['path_segment'])) {
+            $slugHelper = new SlugHelper('tx_news_domain_model_news', 'path_segment', $GLOBALS['TCA']['tx_news_domain_model_news']['columns']['path_segment']['config']);
+            $news->setPathSegment($slugHelper->generate($importItem, $importItem['pid']));
+        }
 
         $contentElementUidArray = GeneralUtility::trimExplode(',', $importItem['content_elements'], true);
         foreach ($contentElementUidArray as $contentElementUid) {
