@@ -137,7 +137,7 @@ class NewsImportService extends AbstractImportService
         }
 
         $news->setPid($importItem['pid']);
-        $news->setHidden($importItem['hidden']);
+        $news->setHidden($importItem['hidden'] ?? false);
         $news->setStarttime($importItem['starttime']);
         $news->setEndtime($importItem['endtime']);
         if (!empty($importItem['fe_group'])) {
